@@ -2,8 +2,9 @@
 .vs/
 *.sdf
 
-# Output Directories
+# Output Files
 ipch/
 Debug/
 Release/
 x64/
+*.aps
