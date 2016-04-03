@@ -1,0 +1,9 @@
+# Visual Studio
+.vs/
+*.sdf
+
+# Output Directories
+ipch/
+Debug/
+Release/
+x64/
