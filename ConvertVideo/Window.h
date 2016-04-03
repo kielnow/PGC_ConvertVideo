@@ -8,6 +8,8 @@ namespace zen
 	class Window
 	{
 	public:
+		static void initialize();
+
 		struct DESC {
 			wstring		title;
 			u32			style;
@@ -17,6 +19,8 @@ namespace zen
 			s32			height;
 			HWND		hWndParent;
 			HMENU		hMenu;
+
+			bool		isMain;
 		};
 
 		static DESC DEFAULT_DESC;
@@ -25,7 +29,7 @@ namespace zen
 
 		virtual ~Window();
 
-		static void initialize();
+		virtual void draw();
 
 	protected:
 		static wstring gClassName;
@@ -36,9 +40,15 @@ namespace zen
 
 		virtual void onClose();
 
-		virtual void onDestroy() {}
+		virtual void onDestroy();
+
+		virtual void onPaint();
+
+		virtual void onSize(u32 state, u32 width, u32 height);
 
 		HWND mHandle;
+		bool mIsMain;
+		ID2D1HwndRenderTarget* mpRenderTarget;
 	};
 
 }

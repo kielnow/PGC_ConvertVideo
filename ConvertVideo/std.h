@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <cstdint>
-#include <cassert>
 
 namespace zen
 {
@@ -24,10 +23,26 @@ namespace zen
 	typedef intptr_t	intptr;
 	typedef size_t		uintptr;
 
+	template <class T> void SafeRelease(T **ppT)
+	{
+		if (*ppT)
+		{
+			(*ppT)->Release();
+			*ppT = NULL;
+		}
+	}
+
 }
 
 #define ZEN_ASSERT(cond, message)\
-{\
-	(void)message;\
+do {\
+	OutputDebugString(message);\
 	assert(cond);\
-}
+} while(0)
+
+#define SAFE_DELETE(p)			if (p) { delete p; p = nullptr; }
+#define SAFE_DELETE_ARRAY(p)	if (p) { delete [] p; p = nullptr; }
+
+#define SAFE_RELEASE(p)			zen::SafeRelease(&p)
+
+#define CHECK_HRESULT(hr)		ZEN_ASSERT(SUCCEEDED(hr), L"Fatal error.")

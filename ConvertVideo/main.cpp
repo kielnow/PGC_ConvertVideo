@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "ConvertVideo.h"
 
 #if 1
 
@@ -17,9 +18,9 @@ int APIENTRY wWinMain(
 		nCmdShow,
 	};
 
-	auto* app = new App(desc);
+	auto* app = new app::ConvertVideo();
 
-	return app->execute();
+	return app->execute(desc);
 }
 
 #endif

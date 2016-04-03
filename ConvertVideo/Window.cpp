@@ -15,6 +15,8 @@ Window::DESC Window::DEFAULT_DESC =
 	CW_USEDEFAULT,
 	nullptr,
 	nullptr,
+
+	false,
 };
 
 Window::Window(const DESC &desc)
@@ -24,6 +26,7 @@ Window::Window(const DESC &desc)
 
 Window::~Window()
 {
+	SAFE_RELEASE(mpRenderTarget);
 }
 
 void Window::initialize()
@@ -62,13 +65,26 @@ void Window::create(const DESC &desc)
 	ShowWindow(mHandle, SW_SHOWDEFAULT);
 	UpdateWindow(mHandle);
 
+	mIsMain = desc.isMain;
+
 	SetProp(mHandle, L"thisPtr", (HANDLE)this);
+
+	RECT rc = { 0 };
+	GetClientRect(mHandle, &rc);
+
+	IGraphics2D->getFactory()->CreateHwndRenderTarget(
+		D2D1::RenderTargetProperties(),
+		D2D1::HwndRenderTargetProperties(
+			mHandle,
+			D2D1::SizeU(rc.right, rc.bottom)),
+		&mpRenderTarget);
+
+	InvalidateRect(mHandle, nullptr, false);
 }
 
 #define HANDLE_MESSAGE(msg, fn)\
 case msg:\
-	thisPtr->fn();\
-	return S_OK
+	return thisPtr->fn(), S_OK;
 
 LRESULT CALLBACK Window::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -79,8 +95,12 @@ LRESULT CALLBACK Window::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 	switch (message) {
 
-		HANDLE_MESSAGE(WM_CLOSE, onClose);
-		HANDLE_MESSAGE(WM_DESTROY, onDestroy);
+		HANDLE_MESSAGE(WM_CLOSE,	onClose);
+		HANDLE_MESSAGE(WM_DESTROY,	onDestroy);
+		HANDLE_MESSAGE(WM_PAINT,	onPaint);
+
+	case WM_SIZE:
+		return thisPtr->onSize(static_cast<u32>(wParam), static_cast<u32>(LOWORD(lParam)), static_cast<u32>(HIWORD(lParam))), S_OK;
 
 	default:
 		break;
@@ -93,4 +113,43 @@ RETURN:
 void Window::onClose()
 {
 	DestroyWindow(mHandle);
+}
+
+void Window::onDestroy()
+{
+	if (mIsMain)
+		PostQuitMessage(0);
+}
+
+void Window::onPaint()
+{
+	PAINTSTRUCT ps;
+	BeginPaint(mHandle, &ps);
+
+	if (mpRenderTarget->CheckWindowState() != D2D1_WINDOW_STATE_OCCLUDED)
+	{
+		mpRenderTarget->BeginDraw();
+
+		mpRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+
+		draw();
+
+		mpRenderTarget->EndDraw();
+	}
+
+	EndPaint(mHandle, &ps);
+}
+
+void Window::onSize(u32 state, u32 width, u32 height)
+{
+	if (mpRenderTarget) {
+		mpRenderTarget->Resize(D2D1::SizeU(width, height));
+		InvalidateRect(mHandle, nullptr, false);
+	}
+}
+
+void Window::draw()
+{
+	if (mIsMain)
+		IApp->draw(mpRenderTarget);
 }
