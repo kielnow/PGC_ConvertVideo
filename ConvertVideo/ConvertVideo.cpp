@@ -105,8 +105,8 @@ void ConvertVideo::initialize()
 		nullptr);
 
 	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 6572));	// 30fps
-	SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 5256));	// 24fps
-	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 3285));	// 15fps
+	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 5256));	// 24fps
+	SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 3285));	// 15fps
 	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 2190));	// 10fps
 	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 1752));	// 8fps
 	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 876));	// 4fps
@@ -248,7 +248,7 @@ void ConvertVideo::update()
 		SAFE_DELETE_ARRAY(index);
 
 		getMainWindow()->redraw();
-		Sleep(42);
+		Sleep(33);
 		return;
 	}
 #else
@@ -549,10 +549,15 @@ ID2D1Bitmap* ConvertVideo::createBitmapFromFrame(const Frame &src, const u8* ind
 				pData[i + 1] = b ? p : p;		// G
 				pData[i + 2] = b ? 0x80 : p;	// R
 				pData[i + 3] = 0xFF;			// A
-#else// blue and pink
-				pData[i] = b ? 0xFF : p;		// B
+#elif 1// blue and pink
+				pData[i    ] = b ? 0xFF : p;	// B
 				pData[i + 1] = b ? 0x80 : p;	// G
 				pData[i + 2] = b ? p : p;		// R
+				pData[i + 3] = 0xFF;			// A
+#else// magenta and yellow
+				pData[i    ] = b ? 0x80 : p;	// B
+				pData[i + 1] = b ? p : p;		// G
+				pData[i + 2] = b ? 0xFF : p;	// R
 				pData[i + 3] = 0xFF;			// A
 #endif
 			}
