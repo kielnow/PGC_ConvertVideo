@@ -2,6 +2,8 @@
 #include "App.h"
 #include "Window.h"
 
+#pragma comment(lib, "ComCtl32.lib")
+
 using namespace zen;
 
 App* App::gInstance = nullptr;
@@ -24,7 +26,10 @@ s32 App::execute(const DESC &desc)
 {
 	gHandle = desc.hInstance;
 
-	Graphics2D::initialize();
+	CHECK_HRESULT(CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE));
+	InitCommonControls();
+	Graphics2D::createInstance();
+	GraphicsWIC::createInstance();
 	Window::initialize();
 	initialize();
 
@@ -42,7 +47,9 @@ s32 App::execute(const DESC &desc)
 	}
 
 	finalize();
-	Graphics2D::finalize();
+	GraphicsWIC::destoryInstance();
+	Graphics2D::destoryInstance();
+	CoUninitialize();
 
 	return static_cast<s32>(msg.wParam);
 }

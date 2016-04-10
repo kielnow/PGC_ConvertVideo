@@ -45,9 +45,15 @@ void Window::initialize()
 	ZEN_ASSERT(RegisterClassEx(&wc), L"RegisterClass is failed.");
 }
 
+void Window::redraw()
+{
+	InvalidateRect(mHandle, nullptr, FALSE);
+}
+
 void Window::create(const DESC &desc)
 {
-	mHandle = CreateWindow(
+	mHandle = CreateWindowEx(
+		0,
 		gClassName.c_str(),
 		desc.title.c_str(),
 		desc.style,
@@ -99,6 +105,9 @@ LRESULT CALLBACK Window::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 		HANDLE_MESSAGE(WM_DESTROY,	onDestroy);
 		HANDLE_MESSAGE(WM_PAINT,	onPaint);
 
+	case WM_CREATE:
+		return thisPtr->onCreate((LPCREATESTRUCT)lParam) ? S_OK : E_FAIL;
+
 	case WM_SIZE:
 		return thisPtr->onSize(static_cast<u32>(wParam), static_cast<u32>(LOWORD(lParam)), static_cast<u32>(HIWORD(lParam))), S_OK;
 
@@ -108,6 +117,11 @@ LRESULT CALLBACK Window::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 RETURN:
 	return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+bool Window::onCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	return true;
 }
 
 void Window::onClose()

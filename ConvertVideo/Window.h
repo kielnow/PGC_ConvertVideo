@@ -31,12 +31,20 @@ namespace zen
 
 		virtual void draw();
 
+		HWND getHandle() const { return mHandle; }
+
+		ID2D1RenderTarget* getRenderTarget() const { return mpRenderTarget; }
+
+		void redraw();
+
 	protected:
 		static wstring gClassName;
 
 		static LRESULT CALLBACK wndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 		void create(const DESC &desc);
+
+		virtual bool onCreate(LPCREATESTRUCT lpCreateStruct);
 
 		virtual void onClose();
 

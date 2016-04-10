@@ -7,21 +7,26 @@
 #include <string>
 #include <tchar.h>
 
+#include <vector>
+
 // Windows
 #include "targetver.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <CommCtrl.h>
+
+// Shell
+#include <shellapi.h>
 
 // COM
 #include <objbase.h>
-
-// Direct2D
-#include <d2d1.h>
-#include <d2d1helper.h>
-#include <d2dbasetypes.h>
-#include <D2DErr.h>
+#include <wrl/client.h>
 
 // zen
 #include "std.h"
-#include "App.h"
+#include "Debug.h"
+#include "Singleton.h"
 #include "Graphics2D.h"
+#include "GraphicsWIC.h"
+#include "Window.h"
+#include "App.h"

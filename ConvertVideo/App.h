@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Window.h"
+
 namespace zen {
 
 	class Window;
@@ -30,6 +32,10 @@ namespace zen {
 		virtual void update();
 
 		virtual void draw(ID2D1RenderTarget* pRT);
+
+		Window* getMainWindow() const { return mpMainWindow; }
+
+		ID2D1RenderTarget* getMainRenderTarget() const { return mpMainWindow->getRenderTarget(); }
 
 	protected:
 		static App* gInstance;

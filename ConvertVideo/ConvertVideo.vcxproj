@@ -140,7 +140,11 @@
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="ConvertVideo.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="Graphics2D.h" />
+    <ClInclude Include="GraphicsWIC.h" />
+    <ClInclude Include="MoviePlayer.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="std.h" />
@@ -149,8 +153,11 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="ConvertVideo.cpp" />
+    <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Graphics2D.cpp" />
+    <ClCompile Include="GraphicsWIC.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MoviePlayer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
