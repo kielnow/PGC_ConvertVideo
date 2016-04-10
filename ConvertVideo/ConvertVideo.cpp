@@ -25,11 +25,15 @@ u8 RLDecoder::get()
 	if (mContinue) {
 		if (mNum == 0)
 			mNum = (*mpVector)[mPt++];
-		if (!--mNum) {
-			mPrev = -1;
-			mContinue = false;
+
+		if (mNum > 0) {
+			const u8 prev = mPrev;
+			if (--mNum <= 0) {
+				mPrev = -1;
+				mContinue = false;
+			}
+			return prev;
 		}
-		return mPrev;
 	}
 
 	const u8 curr = (*mpVector)[mPt++];
@@ -101,11 +105,11 @@ void ConvertVideo::initialize()
 		nullptr);
 
 	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 6572));	// 30fps
-	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 5256));	// 24fps
+	SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 5256));	// 24fps
 	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 3285));	// 15fps
 	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 2190));	// 10fps
 	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 1752));	// 8fps
-	SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 876));	// 4fps
+	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 876));	// 4fps
 	//SendMessage(hTrack, TBM_SETRANGE, TRUE, MAKELONG(0, 400));	// test
 	SendMessage(hTrack, TBM_SETPOS, TRUE, 0);
 
@@ -203,18 +207,14 @@ void ConvertVideo::update()
 	}
 #elif 1
 	//===================================================================================
-	// Decode compressed data 2
+	// Decode compressed data RLE
 	//===================================================================================
 	if (mCompressed)
 	{
-		if (mRLDecoderIndex.isEmpty())
+		if (mRLDecoderIndex.isEmpty()) {
 			mRLDecoderIndex.clear();
-
-#if 0// test
-		for (u32 i = 0; i < mData.index.size(); ++i) {
-			ZEN_TRACELINE(L"%8d %8d", mData.index[i], mRLDecoderIndex.get());
+			mRLDecoderPage.clear();
 		}
-#endif
 
 		const u32 w = 80;
 		const u32 h = 64;
@@ -248,7 +248,7 @@ void ConvertVideo::update()
 		SAFE_DELETE_ARRAY(index);
 
 		getMainWindow()->redraw();
-		Sleep(40);
+		Sleep(42);
 		return;
 	}
 #else
@@ -544,10 +544,17 @@ ID2D1Bitmap* ConvertVideo::createBitmapFromFrame(const Frame &src, const u8* ind
 				const u8 page = src.data[(y >> 3) * src.width + x];
 				const u8 p = (page & ZEN_BIT(y & 0x07)) ? 0xFF : 0;
 
-				pData[i    ] = b ? 0x80 : p;	// B
+#if 0// purple and cyan
+				pData[i    ] = b ? 0xFF : p;	// B
+				pData[i + 1] = b ? p : p;		// G
+				pData[i + 2] = b ? 0x80 : p;	// R
+				pData[i + 3] = 0xFF;			// A
+#else// blue and pink
+				pData[i] = b ? 0xFF : p;		// B
 				pData[i + 1] = b ? 0x80 : p;	// G
 				pData[i + 2] = b ? p : p;		// R
 				pData[i + 3] = 0xFF;			// A
+#endif
 			}
 		}
 
@@ -620,7 +627,7 @@ void ConvertVideo::compressRLE(vector<u8> &dst, const vector<u8> &src)
 		else
 		{
 			dst.push_back(data);
-			if (length > 2) {
+			if (length > 1) {
 				dst.push_back(data);
 				dst.push_back(length - 2);
 			}

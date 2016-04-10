@@ -71,7 +71,7 @@ namespace app
 	protected:
 		vector<u8>* mpVector;
 		u32 mPt;
-		u32 mNum;
+		s32 mNum;
 		s32 mPrev;
 		bool mContinue;
 	};
