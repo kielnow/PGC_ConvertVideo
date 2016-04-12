@@ -44,7 +44,7 @@ namespace zen
 #define ZEN_TRACELINE(...)		zen::Debug::traceLine(__VA_ARGS__)
 
 #if NDEBUG
-#define ZEN_ASSERT(cond, message)	((void)0)
+#define ZEN_ASSERT(cond, message)	((void)(cond))
 #else
 #define ZEN_ASSERT(cond, message)\
 do {\
