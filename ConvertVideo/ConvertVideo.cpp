@@ -65,6 +65,8 @@ void ConvertVideo::initialize()
 
 	mFrameRate = 8;
 
+	clear();
+
 	s32 argc = 0;
 	LPWSTR* argv = CommandLineToArgvW(GetCommandLine(), &argc);
 
@@ -107,8 +109,6 @@ void ConvertVideo::open(ZEN_CWSTR path)
 {
 	if (!path)
 		return;
-
-	clear();
 
 	if (!mpPlayer->open(path))
 		return;

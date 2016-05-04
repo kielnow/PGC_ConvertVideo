@@ -22,9 +22,9 @@ namespace {
 		sort(words.begin(), words.end(), [](const Word &x, const Word &y) { return x.count > y.count; });
 #if 1
 		u8 mv1 = 0, mv2 = 0;
-		for (auto j = 0; j < 7; ++j)	mv1 = max(mv1, words[j].value);
-		for (auto j = 7; j < words.size(); ++j)	mv2 = max(mv2, words[j].value);
-		u8 mv = max(mv1, mv2);
+		for (u32 j = 0; j < 7; ++j)	mv1 = max(mv1, words[j].value);
+		for (u32 j = 7; j < words.size(); ++j)	mv2 = max(mv2, words[j].value);
+		const u8 mv = max(mv1, mv2);
 		u8 vsize = 0;
 		while (mv >= (u32)ZEN_BIT(1 + vsize++));
 #endif
@@ -343,7 +343,7 @@ void app::convertHC2(HCData2 &dst, const vector<u8> &src)
 			slength++;
 		}
 
-		for (auto j = words.size(); j < 7; ++j) {
+		for (u32 j = words.size(); j < 7; ++j) {
 			words.push_back(Word(0));
 		}
 
