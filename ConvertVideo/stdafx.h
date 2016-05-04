@@ -1,13 +1,16 @@
 #pragma once
 
 // Standard Library
+#include <tchar.h>
 #include <cstdlib>
 #include <cassert>
 #include <memory>
 #include <string>
-#include <tchar.h>
-
 #include <vector>
+#include <algorithm>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
 
 // Windows
 #include "targetver.h"
@@ -30,3 +33,5 @@
 #include "GraphicsWIC.h"
 #include "Window.h"
 #include "App.h"
+
+#include "HeaderWriter.h"

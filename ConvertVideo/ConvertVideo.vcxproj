@@ -139,23 +139,28 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Compress.h" />
     <ClInclude Include="ConvertVideo.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Graphics2D.h" />
     <ClInclude Include="GraphicsWIC.h" />
+    <ClInclude Include="HeaderWriter.h" />
     <ClInclude Include="MoviePlayer.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Stream.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="std.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Compress.cpp" />
     <ClCompile Include="ConvertVideo.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Graphics2D.cpp" />
     <ClCompile Include="GraphicsWIC.cpp" />
+    <ClCompile Include="HeaderWriter.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MoviePlayer.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -164,6 +169,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Stream.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -13,8 +13,8 @@ Window::DESC Window::DEFAULT_DESC =
 	CW_USEDEFAULT,
 	CW_USEDEFAULT,
 	CW_USEDEFAULT,
-	nullptr,
-	nullptr,
+	NULL,
+	NULL,
 
 	false,
 };
@@ -36,18 +36,13 @@ void Window::initialize()
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = wndProc;
-	wc.hInstance = GetModuleHandle(nullptr);
-	wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wc.hInstance = GetModuleHandle(NULL);
+	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
 	wc.lpszClassName = gClassName.c_str();
 
 	ZEN_ASSERT(RegisterClassEx(&wc), L"RegisterClass is failed.");
-}
-
-void Window::redraw()
-{
-	InvalidateRect(mHandle, nullptr, FALSE);
 }
 
 void Window::create(const DESC &desc)
@@ -63,8 +58,8 @@ void Window::create(const DESC &desc)
 		desc.height,
 		desc.hWndParent,
 		desc.hMenu,
-		GetModuleHandle(nullptr),
-		nullptr);
+		GetModuleHandle(NULL),
+		NULL);
 	
 	ZEN_ASSERT(mHandle, L"CreateWindow is failed.");
 
@@ -85,7 +80,7 @@ void Window::create(const DESC &desc)
 			D2D1::SizeU(rc.right, rc.bottom)),
 		&mpRenderTarget);
 
-	InvalidateRect(mHandle, nullptr, false);
+	redraw();
 }
 
 #define HANDLE_MESSAGE(msg, fn)\
@@ -158,7 +153,7 @@ void Window::onSize(u32 state, u32 width, u32 height)
 {
 	if (mpRenderTarget) {
 		mpRenderTarget->Resize(D2D1::SizeU(width, height));
-		InvalidateRect(mHandle, nullptr, false);
+		redraw();
 	}
 }
 
@@ -166,4 +161,14 @@ void Window::draw()
 {
 	if (mIsMain)
 		IApp->draw(mpRenderTarget);
+}
+
+void Window::redraw()
+{
+	InvalidateRect(mHandle, NULL, FALSE);
+}
+
+void Window::setSize(u32 width, u32 height)
+{
+	SetWindowPos(mHandle, NULL, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER);
 }

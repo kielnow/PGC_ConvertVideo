@@ -63,6 +63,8 @@ namespace zen
 
 		bool isSeekable() const { return mVideoInfo.seekable; }
 
+		f32 getFramRate() const { return mVideoInfo.frameRate; }
+
 		BitmapWIC* getBitmapWIC() const { return mpBitmapWIC; }
 
 		void setDestSize(u32 width, u32 height);

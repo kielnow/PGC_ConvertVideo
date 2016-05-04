@@ -23,3 +23,8 @@ void Debug::traceLine(const c16* format, ...)
 	wcscat_s(buf, L"\r\n");
 	OutputDebugString(buf);
 }
+
+void Debug::debugBreak()
+{
+	DebugBreak();
+}

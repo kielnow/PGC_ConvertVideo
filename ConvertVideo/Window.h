@@ -37,6 +37,8 @@ namespace zen
 
 		void redraw();
 
+		void setSize(u32 width, u32 height);
+
 	protected:
 		static wstring gClassName;
 

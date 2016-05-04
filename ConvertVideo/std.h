@@ -40,11 +40,12 @@ namespace zen
 
 }
 
-#define ZEN_TRACE(...)			zen::Debug::trace(__VA_ARGS__)
-#define ZEN_TRACELINE(...)		zen::Debug::traceLine(__VA_ARGS__)
+#define ZEN_TRACE(...)				zen::Debug::trace(__VA_ARGS__)
+#define ZEN_TRACELINE(...)			zen::Debug::traceLine(__VA_ARGS__)
 
 #if NDEBUG
 #define ZEN_ASSERT(cond, message)	((void)(cond))
+#define ZEN_DEBUG_BREAK()			/* nop */
 #else
 #define ZEN_ASSERT(cond, message)\
 do {\
@@ -53,13 +54,14 @@ do {\
 		_wassert(_CRT_WIDE(#cond), _CRT_WIDE(__FILE__), (unsigned)(__LINE__));\
 	}\
 } while(0)
+#define ZEN_DEBUG_BREAK()			zen::Debug::debugBreak()
 #endif
 
-#define SAFE_DELETE(p)			if (p) { delete p; p = nullptr; }
-#define SAFE_DELETE_ARRAY(p)	if (p) { delete [] p; p = nullptr; }
+#define SAFE_DELETE(p)				if (p) { delete p; p = nullptr; }
+#define SAFE_DELETE_ARRAY(p)		if (p) { delete [] p; p = nullptr; }
 
-#define SAFE_RELEASE(p)			zen::SafeRelease(&p)
+#define SAFE_RELEASE(p)				zen::SafeRelease(&p)
 
-#define CHECK_HRESULT(hr)		ZEN_ASSERT(SUCCEEDED(hr), L"Fatal error.\n")
+#define CHECK_HRESULT(hr)			ZEN_ASSERT(SUCCEEDED(hr), L"Fatal error.\n")
 
-#define ZEN_BIT(n)				(1 << (n))
+#define ZEN_BIT(n)					(1 << (n))

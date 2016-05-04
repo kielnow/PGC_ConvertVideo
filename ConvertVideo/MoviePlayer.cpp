@@ -35,8 +35,9 @@ namespace {
 	}
 
 	enum {
-		LCD_HEIGHT = 64,
-		LCD_PAGE_SIZE = 8,
+		LCD_WIDTH		= 128,
+		LCD_HEIGHT		= 64,
+		LCD_PAGE_SIZE	= 8,
 	};
 
 }
@@ -320,15 +321,11 @@ ID2D1Bitmap* MoviePlayer::createBitmap(ID2D1RenderTarget* pRT, s64 pos)
 	if (pBitmapData)
 		pBuffer->Unlock();
 
-	// Scaling
+	// Binarization
 	{
-		const u32 w = 80;
-		const u32 h = 60;
 		mpBitmapRT->BeginDraw();
 		mpBitmapRT->Clear(D2D1::ColorF(D2D1::ColorF::White));
-		const u32 margin = mDestHeight - h;
-		const u32 marginT = margin >> 1;
-		D2D1_RECT_F rect = { 0, (f32)marginT, (f32)w, (f32)marginT + h };
+		D2D1_RECT_F rect = { 0, 0, (f32)mDestWidth, (f32)mDestHeight };
 		mpBitmapRT->DrawBitmap(pBitmap, rect);
 		mpBitmapRT->EndDraw();
 
@@ -339,6 +336,15 @@ ID2D1Bitmap* MoviePlayer::createBitmap(ID2D1RenderTarget* pRT, s64 pos)
 			u32 h = 0, l = 0;
 			for (u32 i = 0; i < dataSize; i += depth)
 			{
+#if 1
+				f32 b = (f32)pData[i] / 255.f;
+				f32 g = (f32)pData[i + 1] / 255.f;
+				f32 r = (f32)pData[i + 2] / 255.f;
+				f32 luma = 0.299f * r + 0.587f * g + 0.114f * b;
+				u8 uluma = (u8)(luma * 255.f) & 0xFF;
+				for (u32 j = 0; j < depth; ++j)
+					pData[i + j] = uluma;
+#endif
 				if (pData[i] > 0x7F)
 					++h;
 				else
@@ -349,7 +355,7 @@ ID2D1Bitmap* MoviePlayer::createBitmap(ID2D1RenderTarget* pRT, s64 pos)
 			ZEN_TRACELINE(L"Threshold = %d", threshold);
 
 			for (u32 i = 0; i < dataSize; ++i)
-				pData[i] = pData[i] > threshold ? 0xFF : 0;
+				pData[i] = pData[i] > threshold ? 0 : 0xFF;
 
 			mpBitmapWIC->unmap();
 		}
